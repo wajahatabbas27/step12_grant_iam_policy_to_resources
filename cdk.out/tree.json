@@ -1,0 +1,492 @@
+{
+  "version": "tree-0.1",
+  "tree": {
+    "id": "App",
+    "path": "",
+    "children": {
+      "Tree": {
+        "id": "Tree",
+        "path": "Tree",
+        "constructInfo": {
+          "fqn": "constructs.Construct",
+          "version": "10.0.77"
+        }
+      },
+      "Step12GrantIamPolicyToResourcesStack": {
+        "id": "Step12GrantIamPolicyToResourcesStack",
+        "path": "Step12GrantIamPolicyToResourcesStack",
+        "children": {
+          "RoleApiExample": {
+            "id": "RoleApiExample",
+            "path": "Step12GrantIamPolicyToResourcesStack/RoleApiExample",
+            "children": {
+              "Resource": {
+                "id": "Resource",
+                "path": "Step12GrantIamPolicyToResourcesStack/RoleApiExample/Resource",
+                "attributes": {
+                  "aws:cdk:cloudformation:type": "AWS::AppSync::GraphQLApi",
+                  "aws:cdk:cloudformation:props": {
+                    "authenticationType": "API_KEY",
+                    "name": "ApiForRole",
+                    "xrayEnabled": true
+                  }
+                },
+                "constructInfo": {
+                  "fqn": "aws-cdk-lib.aws_appsync.CfnGraphQLApi",
+                  "version": "2.14.0"
+                }
+              },
+              "Schema": {
+                "id": "Schema",
+                "path": "Step12GrantIamPolicyToResourcesStack/RoleApiExample/Schema",
+                "attributes": {
+                  "aws:cdk:cloudformation:type": "AWS::AppSync::GraphQLSchema",
+                  "aws:cdk:cloudformation:props": {
+                    "apiId": {
+                      "Fn::GetAtt": [
+                        "RoleApiExample5DD3A111",
+                        "ApiId"
+                      ]
+                    },
+                    "definition": "type Data {\n  id: ID!\n  entry: String!\n}\n\ntype Query {\n  allData: [Data]\n}\n\ntype Mutation {\n  createData(entry: String!): Data!\n}\n"
+                  }
+                },
+                "constructInfo": {
+                  "fqn": "aws-cdk-lib.aws_appsync.CfnGraphQLSchema",
+                  "version": "2.14.0"
+                }
+              },
+              "DefaultApiKey": {
+                "id": "DefaultApiKey",
+                "path": "Step12GrantIamPolicyToResourcesStack/RoleApiExample/DefaultApiKey",
+                "attributes": {
+                  "aws:cdk:cloudformation:type": "AWS::AppSync::ApiKey",
+                  "aws:cdk:cloudformation:props": {
+                    "apiId": {
+                      "Fn::GetAtt": [
+                        "RoleApiExample5DD3A111",
+                        "ApiId"
+                      ]
+                    },
+                    "expires": 1677878227
+                  }
+                },
+                "constructInfo": {
+                  "fqn": "aws-cdk-lib.aws_appsync.CfnApiKey",
+                  "version": "2.14.0"
+                }
+              },
+              "LambdaDataSource": {
+                "id": "LambdaDataSource",
+                "path": "Step12GrantIamPolicyToResourcesStack/RoleApiExample/LambdaDataSource",
+                "children": {
+                  "ServiceRole": {
+                    "id": "ServiceRole",
+                    "path": "Step12GrantIamPolicyToResourcesStack/RoleApiExample/LambdaDataSource/ServiceRole",
+                    "children": {
+                      "Resource": {
+                        "id": "Resource",
+                        "path": "Step12GrantIamPolicyToResourcesStack/RoleApiExample/LambdaDataSource/ServiceRole/Resource",
+                        "attributes": {
+                          "aws:cdk:cloudformation:type": "AWS::IAM::Role",
+                          "aws:cdk:cloudformation:props": {
+                            "assumeRolePolicyDocument": {
+                              "Statement": [
+                                {
+                                  "Action": "sts:AssumeRole",
+                                  "Effect": "Allow",
+                                  "Principal": {
+                                    "Service": "appsync.amazonaws.com"
+                                  }
+                                }
+                              ],
+                              "Version": "2012-10-17"
+                            }
+                          }
+                        },
+                        "constructInfo": {
+                          "fqn": "aws-cdk-lib.aws_iam.CfnRole",
+                          "version": "2.14.0"
+                        }
+                      },
+                      "DefaultPolicy": {
+                        "id": "DefaultPolicy",
+                        "path": "Step12GrantIamPolicyToResourcesStack/RoleApiExample/LambdaDataSource/ServiceRole/DefaultPolicy",
+                        "children": {
+                          "Resource": {
+                            "id": "Resource",
+                            "path": "Step12GrantIamPolicyToResourcesStack/RoleApiExample/LambdaDataSource/ServiceRole/DefaultPolicy/Resource",
+                            "attributes": {
+                              "aws:cdk:cloudformation:type": "AWS::IAM::Policy",
+                              "aws:cdk:cloudformation:props": {
+                                "policyDocument": {
+                                  "Statement": [
+                                    {
+                                      "Action": "lambda:InvokeFunction",
+                                      "Effect": "Allow",
+                                      "Resource": {
+                                        "Fn::GetAtt": [
+                                          "LambdaFucntion5B4B855F",
+                                          "Arn"
+                                        ]
+                                      }
+                                    }
+                                  ],
+                                  "Version": "2012-10-17"
+                                },
+                                "policyName": "RoleApiExampleLambdaDataSourceServiceRoleDefaultPolicy085EEE65",
+                                "roles": [
+                                  {
+                                    "Ref": "RoleApiExampleLambdaDataSourceServiceRoleCF89E65A"
+                                  }
+                                ]
+                              }
+                            },
+                            "constructInfo": {
+                              "fqn": "aws-cdk-lib.aws_iam.CfnPolicy",
+                              "version": "2.14.0"
+                            }
+                          }
+                        },
+                        "constructInfo": {
+                          "fqn": "aws-cdk-lib.aws_iam.Policy",
+                          "version": "2.14.0"
+                        }
+                      }
+                    },
+                    "constructInfo": {
+                      "fqn": "aws-cdk-lib.aws_iam.Role",
+                      "version": "2.14.0"
+                    }
+                  },
+                  "Resource": {
+                    "id": "Resource",
+                    "path": "Step12GrantIamPolicyToResourcesStack/RoleApiExample/LambdaDataSource/Resource",
+                    "attributes": {
+                      "aws:cdk:cloudformation:type": "AWS::AppSync::DataSource",
+                      "aws:cdk:cloudformation:props": {
+                        "apiId": {
+                          "Fn::GetAtt": [
+                            "RoleApiExample5DD3A111",
+                            "ApiId"
+                          ]
+                        },
+                        "name": "LambdaDataSource",
+                        "type": "AWS_LAMBDA",
+                        "lambdaConfig": {
+                          "lambdaFunctionArn": {
+                            "Fn::GetAtt": [
+                              "LambdaFucntion5B4B855F",
+                              "Arn"
+                            ]
+                          }
+                        },
+                        "serviceRoleArn": {
+                          "Fn::GetAtt": [
+                            "RoleApiExampleLambdaDataSourceServiceRoleCF89E65A",
+                            "Arn"
+                          ]
+                        }
+                      }
+                    },
+                    "constructInfo": {
+                      "fqn": "aws-cdk-lib.aws_appsync.CfnDataSource",
+                      "version": "2.14.0"
+                    }
+                  },
+                  "MutationcreateDataResolver": {
+                    "id": "MutationcreateDataResolver",
+                    "path": "Step12GrantIamPolicyToResourcesStack/RoleApiExample/LambdaDataSource/MutationcreateDataResolver",
+                    "children": {
+                      "Resource": {
+                        "id": "Resource",
+                        "path": "Step12GrantIamPolicyToResourcesStack/RoleApiExample/LambdaDataSource/MutationcreateDataResolver/Resource",
+                        "attributes": {
+                          "aws:cdk:cloudformation:type": "AWS::AppSync::Resolver",
+                          "aws:cdk:cloudformation:props": {
+                            "apiId": {
+                              "Fn::GetAtt": [
+                                "RoleApiExample5DD3A111",
+                                "ApiId"
+                              ]
+                            },
+                            "fieldName": "createData",
+                            "typeName": "Mutation",
+                            "dataSourceName": "LambdaDataSource",
+                            "kind": "UNIT",
+                            "requestMappingTemplate": "\n          $util.qr($context.arguments.put(\"id\",$util.defaultIfNull($ctx.arguments.id,$util.autoId())))\n          {\n            \"version\": \"2017-02-28\",\n            \"operation\": \"Invoke\",\n            \"payload\":{\n              \"arguments\": $util.toJson($context.arguments)\n            }\n          }\n      "
+                          }
+                        },
+                        "constructInfo": {
+                          "fqn": "aws-cdk-lib.aws_appsync.CfnResolver",
+                          "version": "2.14.0"
+                        }
+                      }
+                    },
+                    "constructInfo": {
+                      "fqn": "@aws-cdk/aws-appsync-alpha.Resolver",
+                      "version": "2.15.0-alpha.0"
+                    }
+                  }
+                },
+                "constructInfo": {
+                  "fqn": "@aws-cdk/aws-appsync-alpha.LambdaDataSource",
+                  "version": "2.15.0-alpha.0"
+                }
+              }
+            },
+            "constructInfo": {
+              "fqn": "@aws-cdk/aws-appsync-alpha.GraphqlApi",
+              "version": "2.15.0-alpha.0"
+            }
+          },
+          "APiUrl": {
+            "id": "APiUrl",
+            "path": "Step12GrantIamPolicyToResourcesStack/APiUrl",
+            "constructInfo": {
+              "fqn": "aws-cdk-lib.CfnOutput",
+              "version": "2.14.0"
+            }
+          },
+          "graphqlapi": {
+            "id": "graphqlapi",
+            "path": "Step12GrantIamPolicyToResourcesStack/graphqlapi",
+            "constructInfo": {
+              "fqn": "aws-cdk-lib.CfnOutput",
+              "version": "2.14.0"
+            }
+          },
+          "Table": {
+            "id": "Table",
+            "path": "Step12GrantIamPolicyToResourcesStack/Table",
+            "children": {
+              "Resource": {
+                "id": "Resource",
+                "path": "Step12GrantIamPolicyToResourcesStack/Table/Resource",
+                "attributes": {
+                  "aws:cdk:cloudformation:type": "AWS::DynamoDB::Table",
+                  "aws:cdk:cloudformation:props": {
+                    "keySchema": [
+                      {
+                        "attributeName": "id",
+                        "keyType": "HASH"
+                      }
+                    ],
+                    "attributeDefinitions": [
+                      {
+                        "attributeName": "id",
+                        "attributeType": "S"
+                      }
+                    ],
+                    "provisionedThroughput": {
+                      "readCapacityUnits": 5,
+                      "writeCapacityUnits": 5
+                    }
+                  }
+                },
+                "constructInfo": {
+                  "fqn": "aws-cdk-lib.aws_dynamodb.CfnTable",
+                  "version": "2.14.0"
+                }
+              },
+              "ScalingRole": {
+                "id": "ScalingRole",
+                "path": "Step12GrantIamPolicyToResourcesStack/Table/ScalingRole",
+                "constructInfo": {
+                  "fqn": "aws-cdk-lib.Resource",
+                  "version": "2.14.0"
+                }
+              }
+            },
+            "constructInfo": {
+              "fqn": "aws-cdk-lib.aws_dynamodb.Table",
+              "version": "2.14.0"
+            }
+          },
+          "LambdaRole": {
+            "id": "LambdaRole",
+            "path": "Step12GrantIamPolicyToResourcesStack/LambdaRole",
+            "children": {
+              "Resource": {
+                "id": "Resource",
+                "path": "Step12GrantIamPolicyToResourcesStack/LambdaRole/Resource",
+                "attributes": {
+                  "aws:cdk:cloudformation:type": "AWS::IAM::Role",
+                  "aws:cdk:cloudformation:props": {
+                    "assumeRolePolicyDocument": {
+                      "Statement": [
+                        {
+                          "Action": "sts:AssumeRole",
+                          "Effect": "Allow",
+                          "Principal": {
+                            "Service": "lambda.amazonaws.com"
+                          }
+                        }
+                      ],
+                      "Version": "2012-10-17"
+                    }
+                  }
+                },
+                "constructInfo": {
+                  "fqn": "aws-cdk-lib.aws_iam.CfnRole",
+                  "version": "2.14.0"
+                }
+              },
+              "DefaultPolicy": {
+                "id": "DefaultPolicy",
+                "path": "Step12GrantIamPolicyToResourcesStack/LambdaRole/DefaultPolicy",
+                "children": {
+                  "Resource": {
+                    "id": "Resource",
+                    "path": "Step12GrantIamPolicyToResourcesStack/LambdaRole/DefaultPolicy/Resource",
+                    "attributes": {
+                      "aws:cdk:cloudformation:type": "AWS::IAM::Policy",
+                      "aws:cdk:cloudformation:props": {
+                        "policyDocument": {
+                          "Statement": [
+                            {
+                              "Action": [
+                                "dynamodb:*",
+                                "logs:*"
+                              ],
+                              "Effect": "Allow",
+                              "Resource": "*"
+                            }
+                          ],
+                          "Version": "2012-10-17"
+                        },
+                        "policyName": "LambdaRoleDefaultPolicy75625A82",
+                        "roles": [
+                          {
+                            "Ref": "LambdaRole3A44B857"
+                          }
+                        ]
+                      }
+                    },
+                    "constructInfo": {
+                      "fqn": "aws-cdk-lib.aws_iam.CfnPolicy",
+                      "version": "2.14.0"
+                    }
+                  }
+                },
+                "constructInfo": {
+                  "fqn": "aws-cdk-lib.aws_iam.Policy",
+                  "version": "2.14.0"
+                }
+              }
+            },
+            "constructInfo": {
+              "fqn": "aws-cdk-lib.aws_iam.Role",
+              "version": "2.14.0"
+            }
+          },
+          "LambdaFucntion": {
+            "id": "LambdaFucntion",
+            "path": "Step12GrantIamPolicyToResourcesStack/LambdaFucntion",
+            "children": {
+              "Code": {
+                "id": "Code",
+                "path": "Step12GrantIamPolicyToResourcesStack/LambdaFucntion/Code",
+                "children": {
+                  "Stage": {
+                    "id": "Stage",
+                    "path": "Step12GrantIamPolicyToResourcesStack/LambdaFucntion/Code/Stage",
+                    "constructInfo": {
+                      "fqn": "aws-cdk-lib.AssetStaging",
+                      "version": "2.14.0"
+                    }
+                  },
+                  "AssetBucket": {
+                    "id": "AssetBucket",
+                    "path": "Step12GrantIamPolicyToResourcesStack/LambdaFucntion/Code/AssetBucket",
+                    "constructInfo": {
+                      "fqn": "aws-cdk-lib.aws_s3.BucketBase",
+                      "version": "2.14.0"
+                    }
+                  }
+                },
+                "constructInfo": {
+                  "fqn": "aws-cdk-lib.aws_s3_assets.Asset",
+                  "version": "2.14.0"
+                }
+              },
+              "Resource": {
+                "id": "Resource",
+                "path": "Step12GrantIamPolicyToResourcesStack/LambdaFucntion/Resource",
+                "attributes": {
+                  "aws:cdk:cloudformation:type": "AWS::Lambda::Function",
+                  "aws:cdk:cloudformation:props": {
+                    "code": {
+                      "s3Bucket": {
+                        "Fn::Sub": "cdk-hnb659fds-assets-${AWS::AccountId}-${AWS::Region}"
+                      },
+                      "s3Key": "d2edfacf6ec661d3ae7544a04d780ef3ed76ad6f89f123ccf3c6aa557d5201f1.zip"
+                    },
+                    "role": {
+                      "Fn::GetAtt": [
+                        "LambdaRole3A44B857",
+                        "Arn"
+                      ]
+                    },
+                    "environment": {
+                      "variables": {
+                        "TABLE": {
+                          "Ref": "TableCD117FA1"
+                        }
+                      }
+                    },
+                    "handler": "index.handler",
+                    "runtime": "nodejs12.x",
+                    "timeout": 10
+                  }
+                },
+                "constructInfo": {
+                  "fqn": "aws-cdk-lib.aws_lambda.CfnFunction",
+                  "version": "2.14.0"
+                }
+              }
+            },
+            "constructInfo": {
+              "fqn": "aws-cdk-lib.aws_lambda.Function",
+              "version": "2.14.0"
+            }
+          },
+          "CDKMetadata": {
+            "id": "CDKMetadata",
+            "path": "Step12GrantIamPolicyToResourcesStack/CDKMetadata",
+            "children": {
+              "Default": {
+                "id": "Default",
+                "path": "Step12GrantIamPolicyToResourcesStack/CDKMetadata/Default",
+                "constructInfo": {
+                  "fqn": "aws-cdk-lib.CfnResource",
+                  "version": "2.14.0"
+                }
+              },
+              "Condition": {
+                "id": "Condition",
+                "path": "Step12GrantIamPolicyToResourcesStack/CDKMetadata/Condition",
+                "constructInfo": {
+                  "fqn": "aws-cdk-lib.CfnCondition",
+                  "version": "2.14.0"
+                }
+              }
+            },
+            "constructInfo": {
+              "fqn": "constructs.Construct",
+              "version": "10.0.77"
+            }
+          }
+        },
+        "constructInfo": {
+          "fqn": "aws-cdk-lib.Stack",
+          "version": "2.14.0"
+        }
+      }
+    },
+    "constructInfo": {
+      "fqn": "aws-cdk-lib.App",
+      "version": "2.14.0"
+    }
+  }
+}

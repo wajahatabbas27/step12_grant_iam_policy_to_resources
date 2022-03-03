@@ -1,0 +1,148 @@
+{
+  "version": "16.0.0",
+  "artifacts": {
+    "Tree": {
+      "type": "cdk:tree",
+      "properties": {
+        "file": "tree.json"
+      }
+    },
+    "Step12GrantIamPolicyToResourcesStack.assets": {
+      "type": "cdk:asset-manifest",
+      "properties": {
+        "file": "Step12GrantIamPolicyToResourcesStack.assets.json",
+        "requiresBootstrapStackVersion": 6,
+        "bootstrapStackVersionSsmParameter": "/cdk-bootstrap/hnb659fds/version"
+      }
+    },
+    "Step12GrantIamPolicyToResourcesStack": {
+      "type": "aws:cloudformation:stack",
+      "environment": "aws://unknown-account/unknown-region",
+      "properties": {
+        "templateFile": "Step12GrantIamPolicyToResourcesStack.template.json",
+        "validateOnSynth": false,
+        "assumeRoleArn": "arn:${AWS::Partition}:iam::${AWS::AccountId}:role/cdk-hnb659fds-deploy-role-${AWS::AccountId}-${AWS::Region}",
+        "cloudFormationExecutionRoleArn": "arn:${AWS::Partition}:iam::${AWS::AccountId}:role/cdk-hnb659fds-cfn-exec-role-${AWS::AccountId}-${AWS::Region}",
+        "stackTemplateAssetObjectUrl": "s3://cdk-hnb659fds-assets-${AWS::AccountId}-${AWS::Region}/709063d2c9b61ab59874d4c32682d2842cdc29a6468fcd3ef6765349dfb6e0c6.json",
+        "requiresBootstrapStackVersion": 6,
+        "bootstrapStackVersionSsmParameter": "/cdk-bootstrap/hnb659fds/version",
+        "additionalDependencies": [
+          "Step12GrantIamPolicyToResourcesStack.assets"
+        ],
+        "lookupRole": {
+          "arn": "arn:${AWS::Partition}:iam::${AWS::AccountId}:role/cdk-hnb659fds-lookup-role-${AWS::AccountId}-${AWS::Region}",
+          "requiresBootstrapStackVersion": 8,
+          "bootstrapStackVersionSsmParameter": "/cdk-bootstrap/hnb659fds/version"
+        }
+      },
+      "dependencies": [
+        "Step12GrantIamPolicyToResourcesStack.assets"
+      ],
+      "metadata": {
+        "/Step12GrantIamPolicyToResourcesStack/RoleApiExample/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "RoleApiExample5DD3A111"
+          }
+        ],
+        "/Step12GrantIamPolicyToResourcesStack/RoleApiExample/Schema": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "RoleApiExampleSchema2C3E8F66"
+          }
+        ],
+        "/Step12GrantIamPolicyToResourcesStack/RoleApiExample/DefaultApiKey": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "RoleApiExampleDefaultApiKey081495EE"
+          }
+        ],
+        "/Step12GrantIamPolicyToResourcesStack/RoleApiExample/LambdaDataSource/ServiceRole/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "RoleApiExampleLambdaDataSourceServiceRoleCF89E65A"
+          }
+        ],
+        "/Step12GrantIamPolicyToResourcesStack/RoleApiExample/LambdaDataSource/ServiceRole/DefaultPolicy/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "RoleApiExampleLambdaDataSourceServiceRoleDefaultPolicy085EEE65"
+          }
+        ],
+        "/Step12GrantIamPolicyToResourcesStack/RoleApiExample/LambdaDataSource/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "RoleApiExampleLambdaDataSourceF5BAF72B"
+          }
+        ],
+        "/Step12GrantIamPolicyToResourcesStack/RoleApiExample/LambdaDataSource/MutationcreateDataResolver/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "RoleApiExampleLambdaDataSourceMutationcreateDataResolver87F2B551"
+          }
+        ],
+        "/Step12GrantIamPolicyToResourcesStack/APiUrl": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "APiUrl"
+          }
+        ],
+        "/Step12GrantIamPolicyToResourcesStack/graphqlapi": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "graphqlapi"
+          }
+        ],
+        "/Step12GrantIamPolicyToResourcesStack/Table/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "TableCD117FA1"
+          }
+        ],
+        "/Step12GrantIamPolicyToResourcesStack/LambdaRole/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "LambdaRole3A44B857"
+          }
+        ],
+        "/Step12GrantIamPolicyToResourcesStack/LambdaRole/DefaultPolicy/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "LambdaRoleDefaultPolicy75625A82"
+          }
+        ],
+        "/Step12GrantIamPolicyToResourcesStack/LambdaFucntion/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "LambdaFucntion5B4B855F"
+          }
+        ],
+        "/Step12GrantIamPolicyToResourcesStack/CDKMetadata/Default": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "CDKMetadata"
+          }
+        ],
+        "/Step12GrantIamPolicyToResourcesStack/CDKMetadata/Condition": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "CDKMetadataAvailable"
+          }
+        ],
+        "/Step12GrantIamPolicyToResourcesStack/BootstrapVersion": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "BootstrapVersion"
+          }
+        ],
+        "/Step12GrantIamPolicyToResourcesStack/CheckBootstrapVersion": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "CheckBootstrapVersion"
+          }
+        ]
+      },
+      "displayName": "Step12GrantIamPolicyToResourcesStack"
+    }
+  }
+}

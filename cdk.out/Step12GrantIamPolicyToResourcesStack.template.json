@@ -1,0 +1,516 @@
+{
+  "Resources": {
+    "RoleApiExample5DD3A111": {
+      "Type": "AWS::AppSync::GraphQLApi",
+      "Properties": {
+        "AuthenticationType": "API_KEY",
+        "Name": "ApiForRole",
+        "XrayEnabled": true
+      },
+      "Metadata": {
+        "aws:cdk:path": "Step12GrantIamPolicyToResourcesStack/RoleApiExample/Resource"
+      }
+    },
+    "RoleApiExampleSchema2C3E8F66": {
+      "Type": "AWS::AppSync::GraphQLSchema",
+      "Properties": {
+        "ApiId": {
+          "Fn::GetAtt": [
+            "RoleApiExample5DD3A111",
+            "ApiId"
+          ]
+        },
+        "Definition": "type Data {\n  id: ID!\n  entry: String!\n}\n\ntype Query {\n  allData: [Data]\n}\n\ntype Mutation {\n  createData(entry: String!): Data!\n}\n"
+      },
+      "Metadata": {
+        "aws:cdk:path": "Step12GrantIamPolicyToResourcesStack/RoleApiExample/Schema"
+      }
+    },
+    "RoleApiExampleDefaultApiKey081495EE": {
+      "Type": "AWS::AppSync::ApiKey",
+      "Properties": {
+        "ApiId": {
+          "Fn::GetAtt": [
+            "RoleApiExample5DD3A111",
+            "ApiId"
+          ]
+        },
+        "Expires": 1677878227
+      },
+      "DependsOn": [
+        "RoleApiExampleSchema2C3E8F66"
+      ],
+      "Metadata": {
+        "aws:cdk:path": "Step12GrantIamPolicyToResourcesStack/RoleApiExample/DefaultApiKey"
+      }
+    },
+    "RoleApiExampleLambdaDataSourceServiceRoleCF89E65A": {
+      "Type": "AWS::IAM::Role",
+      "Properties": {
+        "AssumeRolePolicyDocument": {
+          "Statement": [
+            {
+              "Action": "sts:AssumeRole",
+              "Effect": "Allow",
+              "Principal": {
+                "Service": "appsync.amazonaws.com"
+              }
+            }
+          ],
+          "Version": "2012-10-17"
+        }
+      },
+      "Metadata": {
+        "aws:cdk:path": "Step12GrantIamPolicyToResourcesStack/RoleApiExample/LambdaDataSource/ServiceRole/Resource"
+      }
+    },
+    "RoleApiExampleLambdaDataSourceServiceRoleDefaultPolicy085EEE65": {
+      "Type": "AWS::IAM::Policy",
+      "Properties": {
+        "PolicyDocument": {
+          "Statement": [
+            {
+              "Action": "lambda:InvokeFunction",
+              "Effect": "Allow",
+              "Resource": {
+                "Fn::GetAtt": [
+                  "LambdaFucntion5B4B855F",
+                  "Arn"
+                ]
+              }
+            }
+          ],
+          "Version": "2012-10-17"
+        },
+        "PolicyName": "RoleApiExampleLambdaDataSourceServiceRoleDefaultPolicy085EEE65",
+        "Roles": [
+          {
+            "Ref": "RoleApiExampleLambdaDataSourceServiceRoleCF89E65A"
+          }
+        ]
+      },
+      "Metadata": {
+        "aws:cdk:path": "Step12GrantIamPolicyToResourcesStack/RoleApiExample/LambdaDataSource/ServiceRole/DefaultPolicy/Resource"
+      }
+    },
+    "RoleApiExampleLambdaDataSourceF5BAF72B": {
+      "Type": "AWS::AppSync::DataSource",
+      "Properties": {
+        "ApiId": {
+          "Fn::GetAtt": [
+            "RoleApiExample5DD3A111",
+            "ApiId"
+          ]
+        },
+        "Name": "LambdaDataSource",
+        "Type": "AWS_LAMBDA",
+        "LambdaConfig": {
+          "LambdaFunctionArn": {
+            "Fn::GetAtt": [
+              "LambdaFucntion5B4B855F",
+              "Arn"
+            ]
+          }
+        },
+        "ServiceRoleArn": {
+          "Fn::GetAtt": [
+            "RoleApiExampleLambdaDataSourceServiceRoleCF89E65A",
+            "Arn"
+          ]
+        }
+      },
+      "Metadata": {
+        "aws:cdk:path": "Step12GrantIamPolicyToResourcesStack/RoleApiExample/LambdaDataSource/Resource"
+      }
+    },
+    "RoleApiExampleLambdaDataSourceMutationcreateDataResolver87F2B551": {
+      "Type": "AWS::AppSync::Resolver",
+      "Properties": {
+        "ApiId": {
+          "Fn::GetAtt": [
+            "RoleApiExample5DD3A111",
+            "ApiId"
+          ]
+        },
+        "FieldName": "createData",
+        "TypeName": "Mutation",
+        "DataSourceName": "LambdaDataSource",
+        "Kind": "UNIT",
+        "RequestMappingTemplate": "\n          $util.qr($context.arguments.put(\"id\",$util.defaultIfNull($ctx.arguments.id,$util.autoId())))\n          {\n            \"version\": \"2017-02-28\",\n            \"operation\": \"Invoke\",\n            \"payload\":{\n              \"arguments\": $util.toJson($context.arguments)\n            }\n          }\n      "
+      },
+      "DependsOn": [
+        "RoleApiExampleLambdaDataSourceF5BAF72B",
+        "RoleApiExampleSchema2C3E8F66"
+      ],
+      "Metadata": {
+        "aws:cdk:path": "Step12GrantIamPolicyToResourcesStack/RoleApiExample/LambdaDataSource/MutationcreateDataResolver/Resource"
+      }
+    },
+    "TableCD117FA1": {
+      "Type": "AWS::DynamoDB::Table",
+      "Properties": {
+        "KeySchema": [
+          {
+            "AttributeName": "id",
+            "KeyType": "HASH"
+          }
+        ],
+        "AttributeDefinitions": [
+          {
+            "AttributeName": "id",
+            "AttributeType": "S"
+          }
+        ],
+        "ProvisionedThroughput": {
+          "ReadCapacityUnits": 5,
+          "WriteCapacityUnits": 5
+        }
+      },
+      "UpdateReplacePolicy": "Retain",
+      "DeletionPolicy": "Retain",
+      "Metadata": {
+        "aws:cdk:path": "Step12GrantIamPolicyToResourcesStack/Table/Resource"
+      }
+    },
+    "LambdaRole3A44B857": {
+      "Type": "AWS::IAM::Role",
+      "Properties": {
+        "AssumeRolePolicyDocument": {
+          "Statement": [
+            {
+              "Action": "sts:AssumeRole",
+              "Effect": "Allow",
+              "Principal": {
+                "Service": "lambda.amazonaws.com"
+              }
+            }
+          ],
+          "Version": "2012-10-17"
+        }
+      },
+      "Metadata": {
+        "aws:cdk:path": "Step12GrantIamPolicyToResourcesStack/LambdaRole/Resource"
+      }
+    },
+    "LambdaRoleDefaultPolicy75625A82": {
+      "Type": "AWS::IAM::Policy",
+      "Properties": {
+        "PolicyDocument": {
+          "Statement": [
+            {
+              "Action": [
+                "dynamodb:*",
+                "logs:*"
+              ],
+              "Effect": "Allow",
+              "Resource": "*"
+            }
+          ],
+          "Version": "2012-10-17"
+        },
+        "PolicyName": "LambdaRoleDefaultPolicy75625A82",
+        "Roles": [
+          {
+            "Ref": "LambdaRole3A44B857"
+          }
+        ]
+      },
+      "Metadata": {
+        "aws:cdk:path": "Step12GrantIamPolicyToResourcesStack/LambdaRole/DefaultPolicy/Resource"
+      }
+    },
+    "LambdaFucntion5B4B855F": {
+      "Type": "AWS::Lambda::Function",
+      "Properties": {
+        "Code": {
+          "S3Bucket": {
+            "Fn::Sub": "cdk-hnb659fds-assets-${AWS::AccountId}-${AWS::Region}"
+          },
+          "S3Key": "d2edfacf6ec661d3ae7544a04d780ef3ed76ad6f89f123ccf3c6aa557d5201f1.zip"
+        },
+        "Role": {
+          "Fn::GetAtt": [
+            "LambdaRole3A44B857",
+            "Arn"
+          ]
+        },
+        "Environment": {
+          "Variables": {
+            "TABLE": {
+              "Ref": "TableCD117FA1"
+            }
+          }
+        },
+        "Handler": "index.handler",
+        "Runtime": "nodejs12.x",
+        "Timeout": 10
+      },
+      "DependsOn": [
+        "LambdaRoleDefaultPolicy75625A82",
+        "LambdaRole3A44B857"
+      ],
+      "Metadata": {
+        "aws:cdk:path": "Step12GrantIamPolicyToResourcesStack/LambdaFucntion/Resource",
+        "aws:asset:path": "asset.d2edfacf6ec661d3ae7544a04d780ef3ed76ad6f89f123ccf3c6aa557d5201f1",
+        "aws:asset:is-bundled": false,
+        "aws:asset:property": "Code"
+      }
+    },
+    "CDKMetadata": {
+      "Type": "AWS::CDK::Metadata",
+      "Properties": {
+        "Analytics": "v2:deflate64:H4sIAAAAAAAA/01Qy07DMBD8Fu7OtqHAmbYIDlQCEu7VxjGNG8c2sV0UWfl3bCeBnmZ29qHZuQWf38H6Bn9MRus2E7wCX1qkLQnS0aPWZpAU/P5LvvSom4/DVnPyX5W0YR1GIeivbIjsCS2WyvWUxapgRokL60fCsQNfKDHJEd+V4DTtTGwk9SCxU3Vw8YnVNJnISAR2VY3gn52klisZWwsfidkc0RhmDWwjhBp2jrbM7tCE5TD75qx2lkQ7yVqaC6+euDwtPhfPeyVrPh3O72GdodANhpge55xWEeds5qZPgXyLGM8hWb2K4S+DkUhVMzib1SV/gHwTbp4N51nvpOUdg2LCX2cXQHyXAQAA"
+      },
+      "Metadata": {
+        "aws:cdk:path": "Step12GrantIamPolicyToResourcesStack/CDKMetadata/Default"
+      },
+      "Condition": "CDKMetadataAvailable"
+    }
+  },
+  "Outputs": {
+    "APiUrl": {
+      "Value": {
+        "Fn::GetAtt": [
+          "RoleApiExample5DD3A111",
+          "GraphQLUrl"
+        ]
+      }
+    },
+    "graphqlapi": {
+      "Value": {
+        "Fn::GetAtt": [
+          "RoleApiExampleDefaultApiKey081495EE",
+          "ApiKey"
+        ]
+      }
+    }
+  },
+  "Conditions": {
+    "CDKMetadataAvailable": {
+      "Fn::Or": [
+        {
+          "Fn::Or": [
+            {
+              "Fn::Equals": [
+                {
+                  "Ref": "AWS::Region"
+                },
+                "af-south-1"
+              ]
+            },
+            {
+              "Fn::Equals": [
+                {
+                  "Ref": "AWS::Region"
+                },
+                "ap-east-1"
+              ]
+            },
+            {
+              "Fn::Equals": [
+                {
+                  "Ref": "AWS::Region"
+                },
+                "ap-northeast-1"
+              ]
+            },
+            {
+              "Fn::Equals": [
+                {
+                  "Ref": "AWS::Region"
+                },
+                "ap-northeast-2"
+              ]
+            },
+            {
+              "Fn::Equals": [
+                {
+                  "Ref": "AWS::Region"
+                },
+                "ap-south-1"
+              ]
+            },
+            {
+              "Fn::Equals": [
+                {
+                  "Ref": "AWS::Region"
+                },
+                "ap-southeast-1"
+              ]
+            },
+            {
+              "Fn::Equals": [
+                {
+                  "Ref": "AWS::Region"
+                },
+                "ap-southeast-2"
+              ]
+            },
+            {
+              "Fn::Equals": [
+                {
+                  "Ref": "AWS::Region"
+                },
+                "ca-central-1"
+              ]
+            },
+            {
+              "Fn::Equals": [
+                {
+                  "Ref": "AWS::Region"
+                },
+                "cn-north-1"
+              ]
+            },
+            {
+              "Fn::Equals": [
+                {
+                  "Ref": "AWS::Region"
+                },
+                "cn-northwest-1"
+              ]
+            }
+          ]
+        },
+        {
+          "Fn::Or": [
+            {
+              "Fn::Equals": [
+                {
+                  "Ref": "AWS::Region"
+                },
+                "eu-central-1"
+              ]
+            },
+            {
+              "Fn::Equals": [
+                {
+                  "Ref": "AWS::Region"
+                },
+                "eu-north-1"
+              ]
+            },
+            {
+              "Fn::Equals": [
+                {
+                  "Ref": "AWS::Region"
+                },
+                "eu-south-1"
+              ]
+            },
+            {
+              "Fn::Equals": [
+                {
+                  "Ref": "AWS::Region"
+                },
+                "eu-west-1"
+              ]
+            },
+            {
+              "Fn::Equals": [
+                {
+                  "Ref": "AWS::Region"
+                },
+                "eu-west-2"
+              ]
+            },
+            {
+              "Fn::Equals": [
+                {
+                  "Ref": "AWS::Region"
+                },
+                "eu-west-3"
+              ]
+            },
+            {
+              "Fn::Equals": [
+                {
+                  "Ref": "AWS::Region"
+                },
+                "me-south-1"
+              ]
+            },
+            {
+              "Fn::Equals": [
+                {
+                  "Ref": "AWS::Region"
+                },
+                "sa-east-1"
+              ]
+            },
+            {
+              "Fn::Equals": [
+                {
+                  "Ref": "AWS::Region"
+                },
+                "us-east-1"
+              ]
+            },
+            {
+              "Fn::Equals": [
+                {
+                  "Ref": "AWS::Region"
+                },
+                "us-east-2"
+              ]
+            }
+          ]
+        },
+        {
+          "Fn::Or": [
+            {
+              "Fn::Equals": [
+                {
+                  "Ref": "AWS::Region"
+                },
+                "us-west-1"
+              ]
+            },
+            {
+              "Fn::Equals": [
+                {
+                  "Ref": "AWS::Region"
+                },
+                "us-west-2"
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  },
+  "Parameters": {
+    "BootstrapVersion": {
+      "Type": "AWS::SSM::Parameter::Value<String>",
+      "Default": "/cdk-bootstrap/hnb659fds/version",
+      "Description": "Version of the CDK Bootstrap resources in this environment, automatically retrieved from SSM Parameter Store. [cdk:skip]"
+    }
+  },
+  "Rules": {
+    "CheckBootstrapVersion": {
+      "Assertions": [
+        {
+          "Assert": {
+            "Fn::Not": [
+              {
+                "Fn::Contains": [
+                  [
+                    "1",
+                    "2",
+                    "3",
+                    "4",
+                    "5"
+                  ],
+                  {
+                    "Ref": "BootstrapVersion"
+                  }
+                ]
+              }
+            ]
+          },
+          "AssertDescription": "CDK bootstrap stack version 6 required. Please run 'cdk bootstrap' with a recent version of the CDK CLI."
+        }
+      ]
+    }
+  }
+}
